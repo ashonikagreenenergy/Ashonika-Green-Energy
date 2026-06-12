@@ -1,0 +1,8 @@
+{
+  "name": "Ashonika Green Energy",
+  "description": "A futuristic, 3D-animated corporate website for Ashonika Green Energy, featuring premium UI/UX, interactive solar tools, and high-performance responsiveness.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
