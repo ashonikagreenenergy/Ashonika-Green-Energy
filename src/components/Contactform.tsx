@@ -40,6 +40,7 @@ export default function ContactForm({ selectedSubject, onSubjectChange }: Contac
   const [formState, setFormState] = useState<'idle' | 'otp_pending' | 'submitting' | 'success'>('idle');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [otpError, setOtpError] = useState('');
+  const [debugCode, setDebugCode] = useState('');
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -127,22 +128,35 @@ export default function ContactForm({ selectedSubject, onSubjectChange }: Contac
       return;
     }
 
-    if (formData.subject === 'Free Site Survey') {
-      setFormState('otp_pending');
-    } else {
-      await sendFormToWeb3Forms();
-    }
+    await sendFormToWeb3Forms();
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setOtpError('');
-    if (enteredOtp !== '123456') {
-      setOtpError('Invalid verification code. Please enter 123456 to verify.');
-      return;
+    setFormState('submitting');
+    try {
+      const res = await fetch("/api/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "VERIFY",
+          phone: formData.phone,
+          code: enteredOtp
+        })
+      });
+      const data = await res.json();
+      if (data.status === "verified") {
+        await sendFormToWeb3Forms();
+      } else {
+        setFormState('otp_pending');
+        setOtpError(data.message || 'Invalid verification code. Please try again.');
+      }
+    } catch (err) {
+      console.error("OTP verification error:", err);
+      setFormState('otp_pending');
+      setOtpError('Error connecting to verification server.');
     }
-
-    await sendFormToWeb3Forms();
   };
 
   const handleReset = () => {
@@ -159,11 +173,12 @@ export default function ContactForm({ selectedSubject, onSubjectChange }: Contac
     setErrors({});
     setEnteredOtp('');
     setOtpError('');
+    setDebugCode('');
     setFormState('idle');
   };
 
   return (
-    <section id="contact" className="relative py-28 bg-[#041120] overflow-hidden border-b border-white/5">
+    <section id="contact" className="relative py-12 md:py-28 bg-[#041120] overflow-hidden border-b border-white/5">
 
       <div className="absolute top-1/4 right-0 w-80 h-80 rounded-full bg-[#FFC107]/5 blur-3xl" />
       <div className="absolute bottom-1/4 left-0 w-80 h-80 rounded-full bg-emerald-600/5 blur-3xl" />
@@ -171,7 +186,7 @@ export default function ContactForm({ selectedSubject, onSubjectChange }: Contac
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Title Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-20 space-y-4">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-xs font-bold tracking-widest text-[#FFC107] uppercase">
             <Mail className="w-3.5 h-3.5" />
             Corporate Communications
@@ -324,9 +339,15 @@ export default function ContactForm({ selectedSubject, onSubjectChange }: Contac
                     onChange={(e) => setEnteredOtp(e.target.value.replace(/\D/g, ''))}
                     className="w-full text-center tracking-widest font-mono font-bold px-4 py-3 rounded-xl bg-[#071626] border border-white/10 text-lg text-[#FFC107] focus:border-amber-500 focus:outline-hidden"
                   />
-                  <div className="text-[10px] text-emerald-400 font-mono">
-                    🔑 Verification Demo Key: <strong className="underline">123456</strong>
-                  </div>
+                  {debugCode ? (
+                    <div className="text-[10px] text-emerald-400 font-mono">
+                      🔑 Development Mode [Simulated OTP Code: <strong className="underline">{debugCode}</strong>]
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-emerald-400 font-mono">
+                      🔑 Verification Demo Key: <strong className="underline">123456</strong>
+                    </div>
+                  )}
                   {otpError && (
                     <p className="text-xs text-rose-450 font-bold mt-1">
                       ⚠️ {otpError}

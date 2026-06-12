@@ -5,6 +5,8 @@
 
 import React, { useState } from 'react';
 import { Eye, MapPin, Minimize2, ZoomIn, Landmark, ChevronLeft, ChevronRight, ArrowRight, ArrowLeft } from 'lucide-react';
+import { motion } from 'motion/react';
+import SectionBackground3D from './SectionBackground3D.tsx';
 
 interface ProjectItem {
   id: string;
@@ -124,8 +126,8 @@ export default function Projects({ viewMode = 'full', onNavigateToProjectsPage, 
       category: 'Commercial',
       location: 'RK Link Rd, Tilak Nagar, Kishangarh, Rajasthan 305801',
       capacity: '35 kWp Commercial Rooftop',
-      beforeImg: 'https://lh3.googleusercontent.com/d/1ZcL0IxuhOECqjEOmDQLMwfNBDuKA2eww',
-      afterImg: 'https://lh3.googleusercontent.com/d/1VutBYLuX0W5tnMhR_uRVmvJcvqqs4X0M',
+      beforeImg: '/src/assets/images/jain_restaurant_before_1780579191160.png',
+      afterImg: '/src/assets/images/jain_restaurant_after_1780579174010.png',
       stats: [
         { label: 'Bill Offset', value: '88%' },
         { label: 'Annual Gen', value: '55.4 MWh' },
@@ -133,8 +135,8 @@ export default function Projects({ viewMode = 'full', onNavigateToProjectsPage, 
       ],
       description: '',
       images: [
-        'https://lh3.googleusercontent.com/d/1ZcL0IxuhOECqjEOmDQLMwfNBDuKA2eww',
-        'https://lh3.googleusercontent.com/d/1VutBYLuX0W5tnMhR_uRVmvJcvqqs4X0M'
+        '/src/assets/images/jain_restaurant_before_1780579191160.png',
+        '/src/assets/images/jain_restaurant_after_1780579174010.png'
       ]
     }
   ];
@@ -154,7 +156,9 @@ export default function Projects({ viewMode = 'full', onNavigateToProjectsPage, 
   // RENDER CAROUSEL MODE (Highly compact layout for home page)
   if (viewMode === 'carousel') {
     return (
-      <section id="projects" className="relative py-16 bg-[#071B2F] overflow-hidden border-b border-white/5">
+      <section id="projects" className="relative py-10 md:py-16 bg-[#071B2F] overflow-hidden border-b border-white/5">
+        <SectionBackground3D type="projects" />
+
         <div className="absolute top-1/4 right-0 w-80 h-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 left-0 w-80 h-80 rounded-full bg-[#FFC107]/5 blur-3xl pointer-events-none" />
 
@@ -269,7 +273,9 @@ export default function Projects({ viewMode = 'full', onNavigateToProjectsPage, 
 
   // RENDER COMPREHENSIVE FULL PAGE VIEW (When redirected or selected projects view)
   return (
-    <section id="projects" className="relative py-16 bg-[#071B2F] overflow-hidden border-b border-white/5">
+    <section id="projects" className="relative py-10 md:py-16 bg-[#071B2F] overflow-hidden border-b border-white/5">
+      <SectionBackground3D type="projects" />
+
       <div className="absolute top-1/4 right-0 w-80 h-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

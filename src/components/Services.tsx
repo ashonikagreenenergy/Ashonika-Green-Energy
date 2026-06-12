@@ -148,7 +148,7 @@ export default function Services({ onRequestSurvey }: ServicesProps = {}) {
   ];
 
   return (
-    <section id="services" className="relative py-28 bg-[#041120] overflow-hidden border-b border-white/5">
+    <section id="services" className="relative py-12 md:py-28 bg-[#041120] overflow-hidden border-b border-white/5">
       {/* Interactive 3D Orbiting Panel Slabs Background */}
       <SectionBackground3D type="services" />
 
@@ -159,7 +159,7 @@ export default function Services({ onRequestSurvey }: ServicesProps = {}) {
         
         {/* Section Heading Group */}
         <motion.div
-          className="text-center max-w-3xl mx-auto mb-20 space-y-4"
+          className="text-center max-w-3xl mx-auto mb-10 md:mb-20 space-y-4"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}

@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, ChevronRight, Calculator, PhoneCall, CheckCircle, HelpCircle, Sun } from 'lucide-react';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import Navbar from './components/Navbar.tsx';
 import InteractiveScene from './components/InteractiveScene.tsx';
 import About from './components/About.tsx';
@@ -15,11 +16,40 @@ import Projects from './components/Projects.tsx';
 import Process from './components/Process.tsx';
 import ContactForm from './components/Contactform.tsx';
 import Footer from './components/Footer.tsx';
+import ParticleTrail from './components/ParticleTrail.tsx';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'projects'>('home');
   const [activeSection, setActiveSection] = useState<string>('home');
   const [contactSubject, setContactSubject] = useState<string>('Solar Installation');
+
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 500], [0, 120]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.2]);
+
+  // High performance hardware-accelerated cursor spotlight tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const spotlightX = useSpring(mouseX, { stiffness: 80, damping: 25, mass: 0.5 });
+  const spotlightY = useSpring(mouseY, { stiffness: 80, damping: 25, mass: 0.5 });
+
+  const spotlightStyle = {
+    background: useTransform(
+      [spotlightX, spotlightY],
+      ([x, y]) => `radial-gradient(650px circle at ${x}px ${y}px, rgba(16, 185, 129, 0.08) 0%, rgba(251, 191, 36, 0.02) 40%, transparent 80%)`
+    )
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mouseX, mouseY]);
 
   // Trigger smooth scrolling or routing to section ID
   const handleScrollToSection = (sectionId: string) => {
@@ -115,8 +145,14 @@ export default function App() {
   }, [currentPage]);
 
   return (
-    <div className="min-h-screen bg-[#071B2F] text-gray-100 selection:bg-emerald-600 selection:text-white relative">
+    <div className="min-h-screen bg-[#071B2F] text-gray-100 selection:bg-emerald-600 selection:text-white relative font-sans">
       
+      {/* Global Interactive Spotlight follows the user's cursor */}
+      <motion.div style={spotlightStyle} className="pointer-events-none fixed inset-0 z-30" />
+
+      {/* Cybernetic Particle Trail follows the cursor coordinates */}
+      <ParticleTrail />
+
       {/* Interactive Sticky Header Navigation */}
       <Navbar onNavigate={handleScrollToSection} activeSection={activeSection} />
 
@@ -166,7 +202,10 @@ export default function App() {
             <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-black/60 to-transparent z-10 pointer-events-none" />
             <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#071B2F] to-transparent z-10 pointer-events-none" />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center lg:text-left py-24">
+            <motion.div 
+              style={{ y: heroY, opacity: heroOpacity }}
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center lg:text-left py-24 w-full"
+            >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
                 {/* Hero Copy (7cols) */}
@@ -206,7 +245,7 @@ export default function App() {
                 <div className="lg:col-span-5 h-[350px] lg:h-[500px] pointer-events-none relative" />
 
               </div>
-            </div>
+            </motion.div>
           </header>
 
           {/* Corporate profile Section */}

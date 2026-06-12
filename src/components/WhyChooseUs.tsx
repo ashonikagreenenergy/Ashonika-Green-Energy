@@ -5,6 +5,8 @@
 
 import React from 'react';
 import { Award, Landmark, Zap, Clock, TrendingUp, CheckSquare } from 'lucide-react';
+import { motion } from 'motion/react';
+import SectionBackground3D from './SectionBackground3D.tsx';
 
 interface FeatureItem {
   id: string;
@@ -60,50 +62,86 @@ export default function WhyChooseUs() {
     }
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
   return (
-    <section id="timeline" className="relative py-20 bg-[#041120] overflow-hidden border-b border-white/5">
-      <div className="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-emerald-500/5 blur-3xl animate-pulse" />
+    <section id="timeline" className="relative py-12 md:py-28 bg-[#041120] overflow-hidden border-b border-white/5">
+      {/* Interactive 3D Concentric Solar Tech Orbits Background */}
+      <SectionBackground3D type="whychoose" />
+
+      <div className="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Title Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <span className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-950/40 border border-emerald-500/20 text-[11px] font-bold tracking-widest text-[#FFC107] uppercase rounded-full">
+        <motion.div 
+          className="text-center max-w-3xl mx-auto mb-10 md:mb-20 space-y-4"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-950/40 border border-emerald-500/20 text-xs font-bold tracking-widest text-[#FFC107] uppercase rounded-full">
             <Award className="w-3.5 h-3.5" />
             Uncompromised Corporate Standards
           </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
             Why Partner with <span className="bg-gradient-to-r from-emerald-400 to-[#FFC107] bg-clip-text text-transparent">Ashonika?</span>
           </h2>
-          <p className="text-gray-400 text-xs md:text-sm">
+          <p className="text-gray-400 text-sm md:text-base">
             We deliver state-of-the-art clean energy solutions backed by rigorous certified safety engineering.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Clean, compact responsive Grid Layout */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+        {/* Clean, compact responsive Grid Layout with Stagger Animation - Two column on mobile */}
+        <motion.div 
+          className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={feature.id}
-              className="p-3.5 sm:p-5 rounded-xl sm:rounded-2xl bg-[#09223c]/60 border border-white/15 hover:border-emerald-500/30 transition-all duration-300 shadow-md hover:shadow-emerald-950/10 hover:-translate-y-0.5 flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-start"
+              variants={itemVariants}
+              whileHover={{ y: -8, borderColor: 'rgba(74, 222, 128, 0.3)', transition: { duration: 0.2 } }}
+              className="group p-3 sm:p-6 rounded-xl sm:rounded-2xl bg-[#09223c]/60 backdrop-blur-md border border-white/10 hover:shadow-2xl hover:shadow-emerald-950/5 transition-all duration-300 flex flex-col sm:flex-row gap-3 sm:gap-5 items-start h-full"
             >
-              <div className={`p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl border shrink-0 ${feature.accent}`}>
-                {React.cloneElement(feature.icon as React.ReactElement, { className: 'w-4 h-4 sm:w-5 sm:h-5' })}
+              <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl border shrink-0 transition-transform duration-300 group-hover:scale-110 ${feature.accent}`}>
+                {React.cloneElement(feature.icon as React.ReactElement, { className: 'w-4 h-4 sm:w-6 sm:h-6' })}
               </div>
-              <div className="space-y-0.5 sm:space-y-1">
-                <span className="text-[8px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono block">
+              <div className="space-y-1 sm:space-y-1.5 flex-1 w-full">
+                <span className="text-[8px] sm:text-[10px] font-bold text-emerald-500 uppercase tracking-widest font-mono block">
                   0{index + 1} / Feature
                 </span>
-                <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                <h3 className="text-[11px] sm:text-base font-bold text-white tracking-tight group-hover:text-[#FFC107] transition-colors leading-snug">
                   {feature.title}
                 </h3>
-                <p className="text-gray-400 text-[10px] sm:text-xs md:text-[13px] leading-relaxed">
+                <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </section>

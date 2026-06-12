@@ -132,7 +132,7 @@ export default function TrustedBrands() {
   };
 
   return (
-    <section id="trusted-brands-section" className="py-20 bg-[#071B2F] relative overflow-hidden border-t border-b border-white/5">
+    <section id="trusted-brands-section" className="py-10 md:py-20 bg-[#071B2F] relative overflow-hidden border-t border-b border-white/5">
       {/* Structural background decorations */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 -translate-y-1/2 w-96 h-96 bg-amber-400/5 rounded-full blur-3xl pointer-events-none" />
@@ -140,7 +140,7 @@ export default function TrustedBrands() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-8 md:mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/25 text-xs font-bold tracking-widest text-[#FFC107] uppercase select-none">
             <Award className="w-3.5 h-3.5" />
             <span>Authorized Component Ecosystem</span>

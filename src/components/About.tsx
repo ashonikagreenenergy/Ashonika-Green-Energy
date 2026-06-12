@@ -45,7 +45,7 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" className="relative py-28 bg-[#071B2F] overflow-hidden">
+    <section id="about" className="relative py-12 md:py-28 bg-[#071B2F] overflow-hidden">
 
       {/* Absolute Decorative Ambient Background circles */}
       <div className="absolute top-1/4 left-0 w-80 h-80 rounded-full bg-emerald-600/10 blur-3xl" />
